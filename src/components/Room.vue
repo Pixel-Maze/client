@@ -66,7 +66,7 @@ export default {
         'Join Room'
       )
         .then(data => {
-          this.$router.push(`/room/${data.room._id}`)
+          this.$router.push(`/room`)
           this.$awn.success(data.msg)
           this.socket.emit('join-room', {
             id: data.room._id,

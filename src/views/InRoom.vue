@@ -4,11 +4,12 @@
     <button class="btn-btn-outline-success" @click='backhome(id)'>back</button>
 
     <div class="mainRoom">
-      {{createds}}
+      {{createds}} {{roomList}}
       <div class='mt-3'>
         <div class="mt-2 mb-2">
           <h2>Room {{ roomList.name }}</h2>
         </div>
+        {{roomList.space}}
         <div class='card players' v-for='(player, i) in roomList.space' :key='i'>
           <div>
             Player {{ i+1 }}
@@ -22,7 +23,7 @@
         </div>
       </div>
       <div class="btnStart">
-        <button class="btn-lg btn-outline-info btn" @click='playGame' v-if='isMaster'>
+        <button class="btn-lg btn-outline-info btn" @click='playGame(roomList._id)' v-if='isMaster'>
           START GAME
         </button>
       </div>
@@ -45,10 +46,14 @@ export default {
     }
   },
   methods: {
-    playGame () {
-      this.socket.emit('play-game', this.roomList.space)
+    playGame (id) {
+      const payload = {
+        id,
+        players: this.roomList.space
+      }
+      this.socket.emit('play-game', payload)
       setTimeout(() => {
-        this.$router.push('/game')
+        this.$router.push(`/game/${id}`)
       }, 1500);
     },
     backhome (id) {
@@ -98,9 +103,8 @@ export default {
       this.checkMaster()
     }, 1000);
     this.socket.on('play-game', (data) => {
-      console.log(data)
       this.$store.commit('PLAYER_INGAME', data)
-      this.$router.push('/game')
+      this.$router.push(`/game/${data.id}`)
     })
     this.socket.on('join-rooms', (data) => {
       if(data.id == this.$route.params.id) {

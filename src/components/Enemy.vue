@@ -1,10 +1,9 @@
 <template>
 <div>
-  <input type="text" @keyup='playGame'>
     <div :style="`top: ${enemy.top}px; left: ${enemy.toLeft}px; transform: rotate(${enemy.deg}deg)`" class="player">
         <img class="tank" src="../assets/tank2.png" alt="">
-        <small>{{ enemy }}</small>
     </div>
+
 </div>
 </template>
 
@@ -22,66 +21,66 @@ export default {
   },
     props: ['enemy'],
     methods: {
-      test(){
-        console.log('masuk')
-      },
-      playGame (e) {
-        if(e.key == 'up' && this.enemy.name == localStorage.getItem('name')) {
-          console.log('masuk atas')
-          if(this.enemy.top - 3 >= 0){
-            this.enemy.top-= 3
-            this.socket.emit('downPos', {
-              top: this.enemy.top,
-              name: this.enemy.name
-            })
-          }
-        } else if(e.key == 's' && this.enemy.name == localStorage.getItem('name')) {
-          if(this.enemy.top + 3 <= 516 ){
-            this.enemy.top+= 3
-            this.socket.emit('topPos', {
-              top: this.enemy.top,
-              name: this.enemy.name
-            })
-          }
-        } else if(e.key == 'd' && this.enemy.name == localStorage.getItem('name')) {
-          if(this.enemy.toLeft + 3 <= 1266){
-            this.enemy.toLeft+= 3
-            this.socket.emit('leftPos', {
-              toLeft: this.enemy.toLeft,
-              name: this.enemy.name
-            })
-          }
-        } else if(e.key == 'a' && this.enemy.name == localStorage.getItem('name')) {
-          if(this.enemy.toLeft - 3 >= 0 && this.enemy.name == localStorage.getItem('username')){
-            this.enemy.toLeft-= 3
-            this.socket.emit('rightPos', {
-              toLeft: this.enemy.toLeft,
-              name: this.enemy.name
-            })
-          }
-        }
-      },
-      rotateClock(){
-        this.enemy.deg+=3
-        this.socket.emit('rotateClock', {
-          deg: this.enemy.deg,
-          name: this.enemy.name
-        })
-      },
-      rotateRevClock(){
-        this.enemy.deg-=3,
-        this.socket.emit('rotateRevClock', {
-          deg: this.enemy.deg,
-          name: this.enemy.name,
-        })
-      },
+      // test(){
+      //   console.log('masuk')
+      // },
+      // playGame (e) {
+      //   if(e.key == 'up' && this.enemy.name == localStorage.getItem('name')) {
+      //     console.log('masuk atas')
+      //     if(this.enemy.top - 3 >= 0){
+      //       this.enemy.top-= 3
+      //       this.socket.emit('downPos', {
+      //         top: this.enemy.top,
+      //         name: this.enemy.name
+      //       })
+      //     }
+      //   } else if(e.key == 's' && this.enemy.name == localStorage.getItem('name')) {
+      //     if(this.enemy.top + 3 <= 516 ){
+      //       this.enemy.top+= 3
+      //       this.socket.emit('topPos', {
+      //         top: this.enemy.top,
+      //         name: this.enemy.name
+      //       })
+      //     }
+      //   } else if(e.key == 'd' && this.enemy.name == localStorage.getItem('name')) {
+      //     if(this.enemy.toLeft + 3 <= 1266){
+      //       this.enemy.toLeft+= 3
+      //       this.socket.emit('leftPos', {
+      //         toLeft: this.enemy.toLeft,
+      //         name: this.enemy.name
+      //       })
+      //     }
+      //   } else if(e.key == 'a' && this.enemy.name == localStorage.getItem('name')) {
+      //     if(this.enemy.toLeft - 3 >= 0 && this.enemy.name == localStorage.getItem('username')){
+      //       this.enemy.toLeft-= 3
+      //       this.socket.emit('rightPos', {
+      //         toLeft: this.enemy.toLeft,
+      //         name: this.enemy.name
+      //       })
+      //     }
+      //   }
+      // },
+      // rotateClock(){
+      //   this.enemy.deg+=3
+      //   this.socket.emit('rotateClock', {
+      //     deg: this.enemy.deg,
+      //     name: this.enemy.name
+      //   })
+      // },
+      // rotateRevClock(){
+      //   this.enemy.deg-=3,
+      //   this.socket.emit('rotateRevClock', {
+      //     deg: this.enemy.deg,
+      //     name: this.enemy.name,
+      //   })
+      // },
 
-      getPlayerPosition () {
-        this.socket.emit('getPlayerPosition')
-        this.socket.on('sendPlayerPosition', data => {
-          this.enemyPosition = data
-        })
-      }
+      // getPlayerPosition () {
+      //   this.socket.emit('getPlayerPosition')
+      //   this.socket.on('sendPlayerPosition', data => {
+      //     this.enemyPosition = data
+      //   })
+      // }
 
     },
 
@@ -120,29 +119,29 @@ export default {
   // },
   created () {
 
-    this.socket.on('topPos', (data) => {
-      this.enemy.top = data.top;
-    })
+    // this.socket.on('topPos', (data) => {
+    //   this.enemy.top = data.top;
+    // })
     
-    this.socket.on('downPos', (data) => {
-      this.enemy.top = data.top;
-    })
+    // this.socket.on('downPos', (data) => {
+    //   this.enemy.top = data.top;
+    // })
 
-    this.socket.on('leftPos', (data) => {
-      this.enemy.toLeft = data.toLeft
-    })
+    // this.socket.on('leftPos', (data) => {
+    //   this.enemy.toLeft = data.toLeft
+    // })
 
-    this.socket.on('rightPos', (data) => {
-      this.enemy.toLeft = data.toLeft
-    })
+    // this.socket.on('rightPos', (data) => {
+    //   this.enemy.toLeft = data.toLeft
+    // })
 
-    this.socket.on('rotateClock', (data) => {
-      this.enemy.deg = data.deg;
-    })
+    // this.socket.on('rotateClock', (data) => {
+    //   this.enemy.deg = data.deg;
+    // })
 
-    this.socket.on('rotateRevClock', (data) => {
-      this.enemy.deg = data.deg;
-    })
+    // this.socket.on('rotateRevClock', (data) => {
+    //   this.enemy.deg = data.deg;
+    // })
   }
 }
 </script>
