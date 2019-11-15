@@ -2,23 +2,15 @@
   <div class=" mt-2 d-flex justify-content-center align-items-center flex-column">
     {{ allPlayer }}
     <div class="board">
-      <div :style="`top: ${top}px; left: ${toLeft}px; transform: rotate(${deg}deg)`" class="player">
-        <img class="tank" src="../assets/tank1.png" alt="">
-        {{player1.name}}
+      <div :style="`top: ${p1.top}px; left: ${p1.left}px; transform: rotate(${p1.deg}deg)`" class="player d-flex justify-content-center align-items-center ">
+        <img class="tank" src="../assets/tank1.png" style="transform: rotate(270deg)" alt="">
+        <div :style="`left: ${p1.bullet}px;`" class="bullet"></div>
       </div>
-
-      <!-- <div :style="`top: ${top}px; left: ${toLeft}px; transform: rotate(${deg}deg)`" class="player">
-        <img class="tank" src="../assets/tank1.png" alt="">
-        {{playername}}
-      </div> -->
-
-      <!-- <div v-for="(enemy,index) in allPlayer" :key="index" >
-        <enemy :enemy="enemy"></enemy>
-      </div> -->
-
-      <div class="obsc"></div>
-      <input type='text' @keyup='playGame'>
-      <input type='text' @keyup='playGame2'>
+      <div :style="`top: ${p2.top}px; left: ${p2.left}px; ; transform: rotate(${p2.deg}deg)`"  class="player  d-flex justify-content-center align-items-center ">
+        <img v-if="p2.hit === false" class="tank" src="../assets/tank1.png" style="transform: rotate(270deg)" alt="">
+        <div v-if="p2.hit === false" :style="`left: ${p2.bullet}px;`" class="bullet"></div>
+        <img class="ledakan" v-if="p2.hit === true" :style="`top: ${p2.top}px; left: ${p2.left}px;`" src="../assets/ledakan.gif" alt="">
+      </div>
   </div>
     <div> 
       
@@ -36,106 +28,136 @@ export default {
   },
   data () {
     return {
-      socket:  io.connect("http://localhost:3000"),
-      top: 0,
-      toLeft: 0,
-      deg: 0,
-      playername: 'Owl',
-      id: null,
-      enemy: false,
-      enemyPosition: []
+      bulletPos: {
+        top: 20,
+        toLeft: 25
+      },
+      p1: {
+        top: 0,
+        left: 0,
+        deg: 0,
+        hit: false,
+        bullet: 25
+      },
+      p2: {
+        top: 200,
+        left: 500,
+        deg: 0,
+        hit: false,
+        bullet: 25
+      }
     }
   },
   methods: {
 
+//     down(){
+// <<<<<<< HEAD
+//       if(this.top + 3 <= 516){
+//         this.top+= 3
+//         this.socket.emit('top', {
+//           top: this.top,
+//           id: this.id
+//         })
+//       }
+//     },
+//     up(){
+//       if(this.top - 3 >= 0){
+//         this.top-= 3
+//         this.socket.emit('top', {
+//           top: this.top,
+//           id: this.id
+//         })
+//       }
+//     },
+//     left(){
+//       if(this.toLeft + 3 <= 1266){
+//         this.toLeft+= 3
+//         this.socket.emit('toLeft', {
+//           toLeft: this.toLeft,
+//           id: this.id
+//         })
+//       }
+//     },
+//     right(){
+//       if(this.toLeft - 3 >= 0){
+//         this.toLeft-= 3
+//           this.socket.emit('toLeft', {
+//           toLeft: this.toLeft,
+//           id: this.id
+//         })
+//       }
+//     },
+//     rotateClock(){
+//       this.deg+=3
+//       this.socket.emit('deg', {
+//         deg: this.deg,
+//         id: this.id
+//       })
 
+//     },
+//     rotateRevClock(){
+//       this.deg-=3
+//       this.socket.emit('deg', {
+//         deg: this.deg,
+//         id: this.id
+//       })
+//     },
 
-    down(){
-      if(this.top + 3 <= 516){
-        this.top+= 3
-        this.socket.emit('top', {
-          top: this.top,
-          id: this.id
-        })
+//     getPlayerPosition () {
+//       this.socket.emit('getPlayerPosition')
+//     },
+
+//       },
+
+    down(){  
+      if(this.p1.top + 3 <= 516){
+        this.p1.top+= 3
       }
     },
     up(){
-      if(this.top - 3 >= 0){
-        this.top-= 3
-        this.socket.emit('top', {
-          top: this.top,
-          id: this.id
-        })
+      if(this.p1.top - 3 >= 0){
+        this.p1.top-= 3
       }
     },
     left(){
-      if(this.toLeft + 3 <= 1266){
-        this.toLeft+= 3
-        this.socket.emit('toLeft', {
-          toLeft: this.toLeft,
-          id: this.id
-        })
+      if(this.p1.left + 3 <= 1266){
+        this.p1.left+= 3
       }
     },
     right(){
-      if(this.toLeft - 3 >= 0){
-        this.toLeft-= 3
-          this.socket.emit('toLeft', {
-          toLeft: this.toLeft,
-          id: this.id
-        })
+      if(this.p1.left - 3 >= 0){
+        this.p1.left-= 3
       }
     },
     rotateClock(){
-      this.deg+=3
-      this.socket.emit('deg', {
-        deg: this.deg,
-        id: this.id
-      })
-
+      if(this.p1.deg +3 > 360){
+        this.p1.deg = 0
+      } else {
+        this.p1.deg+=90
+      }
     },
     rotateRevClock(){
-      this.deg-=3
-      this.socket.emit('deg', {
-        deg: this.deg,
-        id: this.id
-      })
+      if(this.p1.deg -3 < -360 ){
+        this.p1.deg = 0
+      }
+      this.p1.deg-= 90
     },
-
-    getPlayerPosition () {
-      this.socket.emit('getPlayerPosition')
-    },
-
-
-
-      playGame (e) {
-        console.log(e)
-        if(e.key == 'w' && this.player1.top - 3 >= 0) {
-          console.log('masuk atas')
-          this.player1.top-= 3
-          this.socket.emit('downPos', {
-            top: this.player1.top
-          })
+    fire(){
+      for (let i = this.p1.bullet; i < 1384; i++) {
+            setTimeout(() => {
+              this.p1.bullet++
+            }, 110);
+      }
+      setTimeout(() => {
+        // FROM TOP (this.toLeft > (100 - 25) && this.toLeft < (100 + 30) && (this.deg == 90 || this.deg == -270) && this.top <  (100 - 30)
+        // FROM RIGHT this.top > (this.top > (this.p2.top - 25) && this.top < (this.p2.top + 25) && (this.deg == 0 || this.deg == 360)
+        // FROM BOTTOM ( this.toLeft > (this.p2.left - 25) && this.toLeft < (this.p2.left + 25) && this.top > this.p2.top && (this.deg == -90 || this.deg == 270) )
+        if( this.p1.top < (this.p2.top + 25)  && this.p1.top > (this.p2.top - 25 )  && this.p1.left > this.p2.left && ( this.p1.deg == 180 || this.p1.deg == -180 ) || (this.p1.left > (this.p2.left - 25) && this.p1.left < (this.p2.left + 25) && this.p1.top > this.p2.top && (this.p1.deg == -90 || this.p1.deg == 270) ) || (this.p1.top > (this.p2.top - 25) && this.p1.top < (this.p2.top + 25) && (this.p1.deg == 0 || this.p1.deg == 360) && this.p1.left < (this.p2.left)) || (this.p1.left > (this.p2.left - 25) && this.p1.left < (this.p2.left + 30) && (this.p1.deg == 90 || this.p1.deg == -270) && this.p1.top < (this.p2.top - 30))){
+          this.p2.hit = true
         }
-        if(e.key == 's' && this.player1.top + 3 <= 516 ) {
-          this.player1.top+= 3
-          this.socket.emit('topPos', {
-            top: this.player1.top
-          })
-        }
-        if(e.key == 'd' && this.player1.toLeft + 3 <= 1266) {
-          this.player1.toLeft+= 3
-          this.socket.emit('leftPos', {
-            toLeft: this.player1.toLeft
-          })
-        }
-        if(e.key == 'a' && this.player1.toLeft - 3 >= 0) {
-          this.player1.toLeft-= 3
-          this.socket.emit('rightPos', {
-            toLeft: this.player1.toLeft
-          })
-        }
-      },
+        this.p1.bullet = 25
+      }, 400);
+    }
   },
 
   mounted(){
@@ -159,6 +181,7 @@ export default {
          this.rotateRevClock(); 
        }
        if ( String.fromCharCode(e.keyCode) == ' ') { 
+         this.fire()
        }
     })
       // playGame2 (e) {
@@ -351,45 +374,46 @@ export default {
         this.deg = data.deg;
         this.id = data.id;
       })
-
-<<<<<<< HEAD
-      this.socket.on('rotateRevClock', (data) => {
-        this.deg = data.deg;
-        this.id = data.id
-      })
-    }//end if
-
-    
-
-    }//end else
-    // this.getPlayerPosition()
-
-
+      }
+    }
   }
-=======
-    }else {
-      this.socket.emit('myPosition', {
-        top: this.top,
-        toLeft: this.toLeft,
-        deg: this.deg,
-        id: this.id
-      })
-      this.socket.on('enemyPosition', (data) => {
-        this.enemyPosition = data
-      })
-    }
+
+  //     this.socket.on('rotateRevClock', (data) => {
+  //       this.deg = data.deg;
+  //       this.id = data.id
+  //     })
+  //   }//end if
 
     
 
-    }
-  }//end export default
->>>>>>> logic-3-adding
+  //   }//end else
+  //   // this.getPlayerPosition()
+
+
+  // }
+    // else {
+    //   this.socket.emit('myPosition', {
+    //     top: this.top,
+    //     toLeft: this.toLeft,
+    //     deg: this.deg,
+    //     id: this.id
+    //   })
+    //   this.socket.on('enemyPosition', (data) => {
+    //     this.enemyPosition = data
+    //   })
+    // }
+
+    
+
+    
+  //end export default
 
 </script>
 
 <style>
 
 .board {
+  overflow: hidden;
   position: relative;
   width: 1266px;
   height: 516px;
@@ -397,13 +421,29 @@ export default {
   background-image: url(../assets/pixelMap.jpg)
 }
 
+
 .player{
   position: absolute;
-  transition: 100ms;
+  width: 50px;
+  height: 50px;
+  border: 2px solid red;
 }
 
 .player .tank{
   width: 50px;
+  height: auto;
+}
+
+.bullet{
+  position: absolute;
+  width: 10px;
+  height: 5px;
+  background-color: blue;
+  z-index: -1;
+}
+
+.ledakan{
+  width: 100px;
   height: auto;
 }
 
