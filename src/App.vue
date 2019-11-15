@@ -1,25 +1,35 @@
 <template>
   <div id="app">
+    <div id="nav">
+      <NavBar />
+    </div>
     <router-view/>
   </div>
 </template>
 
 <script>
-import io from 'socket.io-client'
+import NavBar from '@/components/NavBar.vue'
+// import io from 'socket.io-client'
 
 export default {
-  data () {
-    return {
-      socket: io.connect('http://localhost:3000')
-    }
+  components: {
+    NavBar
   },
-  created() {
-    this.socket.emit('send', 'hai')
-
-    this.socket.on('send', (data) => {
-      console.log('hallo')
-    })
+  created () {
+      this.$store.dispatch('fetchingRoom')
   }
+  // data () {
+  //   return {
+  //     socket: io.connect('http://localhost:3000')
+  //   }
+  // },
+  // created() {
+  //   this.socket.emit('send', 'hai')
+
+  //   this.socket.on('send', (data) => {
+  //     console.log(data)
+  //   })
+  // }
 }
 </script>
 
