@@ -1,13 +1,24 @@
 <template>
   <div class=" mt-2 d-flex justify-content-center align-items-center flex-column">
+    {{ allPlayer }}
     <div class="board">
       <div :style="`top: ${top}px; left: ${toLeft}px; transform: rotate(${deg}deg)`" class="player">
         <img class="tank" src="../assets/tank1.png" alt="">
+        {{player1.name}}
       </div>
 
-      <enemy v-for="(enemy,index) in enemyPosition" :key="index" :enemy="enemy"></enemy>
+      <!-- <div :style="`top: ${top}px; left: ${toLeft}px; transform: rotate(${deg}deg)`" class="player">
+        <img class="tank" src="../assets/tank1.png" alt="">
+        {{playername}}
+      </div> -->
+
+      <!-- <div v-for="(enemy,index) in allPlayer" :key="index" >
+        <enemy :enemy="enemy"></enemy>
+      </div> -->
 
       <div class="obsc"></div>
+      <input type='text' @keyup='playGame'>
+      <input type='text' @keyup='playGame2'>
   </div>
     <div> 
       
@@ -25,7 +36,7 @@ export default {
   },
   data () {
     return {
-      socket: {},
+      socket:  io.connect("http://localhost:3000"),
       top: 0,
       toLeft: 0,
       deg: 0,
@@ -91,8 +102,38 @@ export default {
 
     getPlayerPosition () {
       this.socket.emit('getPlayerPosition')
-    }
+    },
 
+
+
+      playGame (e) {
+        console.log(e)
+        if(e.key == 'w' && this.player1.top - 3 >= 0) {
+          console.log('masuk atas')
+          this.player1.top-= 3
+          this.socket.emit('downPos', {
+            top: this.player1.top
+          })
+        }
+        if(e.key == 's' && this.player1.top + 3 <= 516 ) {
+          this.player1.top+= 3
+          this.socket.emit('topPos', {
+            top: this.player1.top
+          })
+        }
+        if(e.key == 'd' && this.player1.toLeft + 3 <= 1266) {
+          this.player1.toLeft+= 3
+          this.socket.emit('leftPos', {
+            toLeft: this.player1.toLeft
+          })
+        }
+        if(e.key == 'a' && this.player1.toLeft - 3 >= 0) {
+          this.player1.toLeft-= 3
+          this.socket.emit('rightPos', {
+            toLeft: this.player1.toLeft
+          })
+        }
+      },
   },
 
   mounted(){
@@ -118,10 +159,151 @@ export default {
        if ( String.fromCharCode(e.keyCode) == ' ') { 
        }
     })
+      // playGame2 (e) {
+      //   if(e.key == 'up' && this.enemy.name == localStorage.getItem('name')) {
+      //     console.log('masuk atas')
+      //     if(this.enemy.top - 3 >= 0){
+      //       this.enemy.top-= 3
+      //       this.socket.emit('downPos', {
+      //         top: this.enemy.top
+      //       })
+      //     }
+      //   } else if(e.key == 's' && this.enemy.name == localStorage.getItem('name')) {
+      //     if(this.enemy.top + 3 <= 516 ){
+      //       this.enemy.top+= 3
+      //       this.socket.emit('topPos', {
+      //         top: this.enemy.top
+      //       })
+      //     }
+      //   } else if(e.key == 'd' && this.enemy.name == localStorage.getItem('name')) {
+      //     if(this.enemy.toLeft + 3 <= 1266){
+      //       this.enemy.toLeft+= 3
+      //       this.socket.emit('leftPos', {
+      //         toLeft: this.enemy.toLeft
+      //       })
+      //     }
+      //   } else if(e.key == 'a' && this.enemy.name == localStorage.getItem('name')) {
+      //     if(this.enemy.toLeft - 3 >= 0 && this.enemy.name == localStorage.getItem('username')){
+      //       this.enemy.toLeft-= 3
+      //       this.socket.emit('rightPos', {
+      //         toLeft: this.enemy.toLeft
+      //       })
+      //     }
+      //   }
+      // },
+    // down(){
+    //   if(this.top + 3 <= 516){
+    //     this.top+= 3
+    //     this.socket.emit('topPos', {
+    //       top: this.top,
+    //       id: this.id
+    //     })
+    //   }
+    // },
+    // up(){
+    //   if(this.top - 3 >= 0){
+    //     this.top-= 3
+    //     this.socket.emit('downPos', {
+    //       top: this.top,
+    //       id: this.id
+    //     })
+    //   }
+    // },
+    // left(){
+    //   if(this.toLeft + 3 <= 1266){
+    //     this.toLeft+= 3
+    //     this.socket.emit('leftPos', {
+    //       toLeft: this.toLeft,
+    //       id: this.id
+    //     })
+    //   }
+    // },
+    // right(){
+    //   if(this.toLeft - 3 >= 0){
+    //     this.toLeft-= 3
+    //     this.socket.emit('rightPos', {
+    //       toLeft: this.toLeft,
+    //       id: this.id
+    //     })
+    //   }
+    // },
+    // rotateClock(){
+    //   this.deg+=3
+    //   this.socket.emit('rotateClock', {
+    //     deg: this.deg,
+    //     id: this.id
+    //   })
+    // },
+    // rotateRevClock(){
+    //   this.deg-=3,
+    //   this.socket.emit('rotateRevClock', {
+    //     deg: this.deg,
+    //     id: this.id,
+    //   })
+    // },
 
-  },  
+    // getPlayerPosition () {
+    //   this.socket.emit('getPlayerPosition')
+    //   this.socket.on('sendPlayerPosition', data => {
+    //     this.enemyPosition = data
+    //   })
+    // }
+
+  },
+
+  // mounted(){
+  //   window.addEventListener('keypress', e => {
+  //      if ( String.fromCharCode(e.keyCode) == 'w') { 
+  //        this.up(); 
+  //      }
+  //      if ( String.fromCharCode(e.keyCode) == 's') { 
+  //        this.down(); 
+  //      }
+  //      if ( String.fromCharCode(e.keyCode) == 'd') { 
+  //        this.left(); 
+  //      }
+  //      if ( String.fromCharCode(e.keyCode) == 'a') { 
+  //        this.right(); 
+  //      }
+  //      if ( String.fromCharCode(e.keyCode) == ']') {
+  //        this.rotateClock(); 
+  //      }
+  //      if ( String.fromCharCode(e.keyCode) == '[') { 
+  //        this.rotateRevClock(); 
+  //      }
+  //      if ( String.fromCharCode(e.keyCode) == ' ') { 
+        
+  //      }
+  //   })
+  //     this.socket.emit('getPlayerPosition')
+  //     this.socket.on('sendPlayerPosition', data => {
+  //       this.enemyPosition = data
+  //     })
+
+      
+    
+
+  // },
+  computed: {
+    allPlayer () {
+      return this.$store.state.playerInGame
+    },
+    player1 () {
+      return this.$store.state.playerInGame[0]
+    },
+    player2 () {
+      return this.$store.state.playerInGame[1]
+    }
+  },
   created() {
-    this.socket = io("http://localhost:3000")
+    this.socket.emit('enemyPosition', {
+      top: this.top,
+      toLeft: this.left,
+      deg: this.deg
+    })
+    this.socket.on('enemyPosition', data => {
+      this.enemyPosition.push(data)
+    })
 
     if (this.id == null) {
       this.socket.emit('newUser', {
@@ -137,12 +319,45 @@ export default {
       this.socket.on('enemyPosition', (data) => {
         this.enemyPosition = data
       })
+    //new
 
+      this.socket.on('topPos', (data) => {
+        this.player1.top = data.top;
+        this.id = data.id
+      })
+      
+      this.socket.on('downPos', (data) => {
+        this.player1.top = data.top;
+        this.id = data.id
+      })
+
+      this.socket.on('leftPos', (data) => {
+        this.player1.toLeft = data.toLeft
+        this.id = data.id
+      })
+
+      this.socket.on('rightPos', (data) => {
+        this.player1.toLeft = data.toLeft
+        this.id = data.id
+      })
+
+      this.socket.on('rotateClock', (data) => {
+        this.deg = data.deg;
+        this.id = data.id;
+      })
+
+      this.socket.on('rotateRevClock', (data) => {
+        this.deg = data.deg;
+        this.id = data.id
+      })
     }//end if
 
     
 
     }//end else
+    // this.getPlayerPosition()
+
+
   }
 
 </script>

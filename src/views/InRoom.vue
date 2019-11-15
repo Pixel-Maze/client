@@ -4,6 +4,7 @@
     <button class="btn-btn-outline-success" @click='backhome(id)'>back</button>
 
     <div class="mainRoom">
+      {{createds}}
       <div class='mt-3'>
         <div class="mt-2 mb-2">
           <h2>Room {{ roomList.name }}</h2>
@@ -21,7 +22,7 @@
         </div>
       </div>
       <div class="btnStart">
-        <button class="btn-lg btn-outline-info btn">
+        <button class="btn-lg btn-outline-info btn" @click='playGame' v-if='isMaster'>
           START GAME
         </button>
       </div>
@@ -39,10 +40,17 @@ export default {
     return {
       socket: io.connect(`http://localhost:3000`),
       joinRoom: false,
-      message: null
+      message: null,
+      isMaster: false
     }
   },
   methods: {
+    playGame () {
+      this.socket.emit('play-game', this.roomList.space)
+      setTimeout(() => {
+        this.$router.push('/game')
+      }, 1500);
+    },
     backhome (id) {
       let tempMsg
       axios({
@@ -68,6 +76,11 @@ export default {
           this.$awn.warning(err.response.data.msg)
         })
     },
+    checkMaster () {
+      if(this.createds == localStorage.getItem('name')) {
+        this.isMaster = true;
+      }
+    }
   },
   computed: {
     roomList () {
@@ -75,9 +88,20 @@ export default {
     },
     id () {
       return this.$route.params.id
+    },
+    createds () {
+      return this.$store.state.created
     }
   },
   created () {
+    setTimeout(() => {
+      this.checkMaster()
+    }, 1000);
+    this.socket.on('play-game', (data) => {
+      console.log(data)
+      this.$store.commit('PLAYER_INGAME', data)
+      this.$router.push('/game')
+    })
     this.socket.on('join-rooms', (data) => {
       if(data.id == this.$route.params.id) {
         this.joinRoom = true;
@@ -95,7 +119,6 @@ export default {
         this.$store.dispatch('fetchRoomById', this.$route.params.id)
       }
     })
-
     this.socket.on('leaving-rooms', (data) => {
       if(data.id == this.$route.params.id) {
         this.joinRoom = true;
