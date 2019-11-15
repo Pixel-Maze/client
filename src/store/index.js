@@ -9,8 +9,10 @@ export default new Vuex.Store({
     userInRoom: [],
     allRoom: [],
     inRoom: {},
+    created: null,
     isAdmin: false,
-    isLogin: false
+    isLogin: false,
+    playerInGame: []
   },
   mutations: {
     CREATED_ROOM (state, room) {
@@ -21,6 +23,7 @@ export default new Vuex.Store({
     },
     ROOM_ID (state, room) {
       state.inRoom = room
+      state.created = room.create
     },
     CHECK_ADMIN (state, payload) {
       state.isLogin = true;
@@ -28,6 +31,9 @@ export default new Vuex.Store({
     },
     CHECK_LOGIN (state, payload) {
       state.isLogin = true;
+    },
+    PLAYER_INGAME (state, payload) {
+      state.playerInGame = payload
     }
   },
   actions: {
@@ -67,7 +73,8 @@ export default new Vuex.Store({
           method: 'post',
           url: '/rooms',
           data: {
-            name: room
+            name: room,
+            create: localStorage.getItem('name')
           }
         })
           .then(({data}) => {
