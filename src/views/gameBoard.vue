@@ -36,10 +36,11 @@ export default {
     }
   },
   methods: {
+
     down(){
       if(this.top + 3 <= 516){
         this.top+= 3
-        this.socket.emit('topPos', {
+        this.socket.emit('top', {
           top: this.top,
           id: this.id
         })
@@ -48,7 +49,7 @@ export default {
     up(){
       if(this.top - 3 >= 0){
         this.top-= 3
-        this.socket.emit('topPos', {
+        this.socket.emit('top', {
           top: this.top,
           id: this.id
         })
@@ -57,8 +58,8 @@ export default {
     left(){
       if(this.toLeft + 3 <= 1266){
         this.toLeft+= 3
-        this.socket.emit('leftPos', {
-          toleft: this.toleft,
+        this.socket.emit('toLeft', {
+          toLeft: this.toLeft,
           id: this.id
         })
       }
@@ -66,7 +67,7 @@ export default {
     right(){
       if(this.toLeft - 3 >= 0){
         this.toLeft-= 3
-        this.socket.emit('rightPos', {
+          this.socket.emit('toLeft', {
           toLeft: this.toLeft,
           id: this.id
         })
@@ -74,34 +75,33 @@ export default {
     },
     rotateClock(){
       this.deg+=3
-      this.socket.emit('rotateClock', {
+      this.socket.emit('deg', {
         deg: this.deg,
         id: this.id
       })
+
     },
     rotateRevClock(){
-      this.deg-=3,
-      this.socket.emit('rotateRevClock', {
+      this.deg-=3
+      this.socket.emit('deg', {
         deg: this.deg,
-        id: this.id,
+        id: this.id
       })
     },
 
     getPlayerPosition () {
       this.socket.emit('getPlayerPosition')
-      this.socket.on('sendPlayerPosition', data => {
-        this.enemyPosition = data
-      })
     }
 
   },
+
   mounted(){
     window.addEventListener('keypress', e => {
        if ( String.fromCharCode(e.keyCode) == 'w') { 
-         this.up(); 
+         this.up();
        }
        if ( String.fromCharCode(e.keyCode) == 's') { 
-         this.down(); 
+         this.down();
        }
        if ( String.fromCharCode(e.keyCode) == 'd') { 
          this.left(); 
@@ -116,48 +116,35 @@ export default {
          this.rotateRevClock(); 
        }
        if ( String.fromCharCode(e.keyCode) == ' ') { 
-        
        }
     })
-      this.socket.emit('getPlayerPosition')
-      this.socket.on('sendPlayerPosition', data => {
-        this.enemyPosition = data
-      })
-
-      
-    
 
   },  
   created() {
-
     this.socket = io("http://localhost:3000")
-    this.socket.emit('enemyPosition', {
-      top: this.top,
-      toLeft: this.left,
-      deg: this.deg
-    })
-    this.socket.on('enemyPosition', data => {
-      this.enemyPosition.push(data)
-    })
 
-    this.socket.emit('playerId', {
-      top: this.top,
-      toLeft: this.toLeft,
-      deg: this.deg,
-      playername: this.player
-    })
-    this.socket.on('numberId', data => {
-      this.id = data
-    })
+    if (this.id == null) {
+      this.socket.emit('newUser', {
+        top: this.top,
+        toLeft: this.toLeft,
+        deg: this.deg,
+      })
 
-    this.socket.on('getEnemy', data => {
-      this.enemyPosition = data
-    })
+      this.socket.on ('sendId', (data) => {
+        this.id = data
+      })
+
+      this.socket.on('enemyPosition', (data) => {
+        this.enemyPosition = data
+      })
+
+    }//end if
+
     
 
-    this.getPlayerPosition()
+    }//end else
   }
-}
+
 </script>
 
 <style>
@@ -176,7 +163,7 @@ export default {
 }
 
 .player .tank{
-  width: 30px;
+  width: 50px;
   height: auto;
 }
 
