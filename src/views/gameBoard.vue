@@ -37,6 +37,8 @@ export default {
   },
   methods: {
 
+
+
     down(){
       if(this.top + 3 <= 516){
         this.top+= 3
@@ -124,6 +126,10 @@ export default {
     this.socket = io("http://localhost:3000")
 
     if (this.id == null) {
+
+      // let topper = Math.floor(Math.random()*450)
+      // let lefter = Math.floor(Math.random()*1000)
+      // let deger = Math.floor(Math.random()*300)
       this.socket.emit('newUser', {
         top: this.top,
         toLeft: this.toLeft,
@@ -138,12 +144,22 @@ export default {
         this.enemyPosition = data
       })
 
-    }//end if
+    }else {
+      this.socket.emit('myPosition', {
+        top: this.top,
+        toLeft: this.toLeft,
+        deg: this.deg,
+        id: this.id
+      })
+      this.socket.on('enemyPosition', (data) => {
+        this.enemyPosition = data
+      })
+    }
 
     
 
-    }//end else
-  }
+    }
+  }//end export default
 
 </script>
 
@@ -151,8 +167,8 @@ export default {
 
 .board {
   position: relative;
-  width: 1300px;
-  height: 550px;
+  width: 1266px;
+  height: 516px;
   border: 2px solid black;
   background-image: url(../assets/pixelMap.jpg)
 }
