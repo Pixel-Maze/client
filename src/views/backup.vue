@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     down(){
-      if(this.top + 3 <= 516){
+      if(this.top + 3 <= 516)
         this.top+= 3
         this.socket.emit('topPos', {
           top: this.top,
@@ -127,7 +127,7 @@ export default {
       
     
 
-  },  
+  }
   created() {
 
     this.socket = io("http://localhost:3000")
