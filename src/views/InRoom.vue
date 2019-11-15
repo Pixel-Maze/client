@@ -4,7 +4,6 @@
     <button class="btn-btn-outline-success" @click='backhome(id)'>back</button>
 
     <div class="mainRoom">
-      {{createds}} {{roomList}}
       <div class='mt-3'>
         <div class="mt-2 mb-2">
           <h2>Room {{ roomList.name }}</h2>
@@ -39,7 +38,7 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      socket: io.connect(`http://localhost:3000`),
+      socket: io.connect(`http://serverpixel.dreamcarofficial.com/`),
       joinRoom: false,
       message: null,
       isMaster: false
@@ -53,7 +52,7 @@ export default {
       }
       this.socket.emit('play-game', payload)
       setTimeout(() => {
-        this.$router.push(`/game/${id}`)
+        this.$router.push(`/game`)
       }, 1500);
     },
     backhome (id) {
@@ -104,7 +103,7 @@ export default {
     }, 1000);
     this.socket.on('play-game', (data) => {
       this.$store.commit('PLAYER_INGAME', data)
-      this.$router.push(`/game/${data.id}`)
+      this.$router.push(`/game`)
     })
     this.socket.on('join-rooms', (data) => {
       if(data.id == this.$route.params.id) {

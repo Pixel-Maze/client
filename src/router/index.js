@@ -20,7 +20,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/game/:id',
+    path: '/game',
     name: 'game',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
@@ -28,7 +28,7 @@ const routes = [
     component: gameBoard
   },
   {
-    path: '/room',
+    path: '/room/:id',
     name: 'inroom',
     component: () => import(/* webpackChunkName: "inroom" */ '../views/InRoom.vue')
   }

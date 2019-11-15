@@ -16,7 +16,7 @@ export default {
       // top: 0,
       // toLeft: 0,
       // deg: 0,
-      socket: io.connect('http://localhost:3000'),
+      socket: io.connect('http://serverpixel.dreamcarofficial.com'),
     }
   },
     props: ['enemy'],

@@ -60,7 +60,7 @@ export default new Vuex.Store({
         })
           .then(({data}) => {
             context.commit('ROOM_ID', data.room)
-            resolve()
+            resolve(data.room)
           })
           .catch(err => {
             reject(err.response.data.msg)

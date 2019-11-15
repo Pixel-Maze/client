@@ -24,7 +24,7 @@ export default {
   data () {
     return {
       roomName: null,
-      socket: io.connect('http://localhost:3000')
+      socket: io.connect('http://serverpixel.dreamcarofficial.com')
     }
   },
   methods: {
@@ -59,19 +59,22 @@ export default {
         name: localStorage.getItem('name'),
         id
       }
-      this.$awn.asyncBlock(
-        this.$store.dispatch('joinRoom', payload),
-        null,
-        null,
-        'Join Room'
-      )
+        this.$awn.asyncBlock(
+              this.$store.dispatch('joinRoom', payload),
+              null,
+              null,
+              'Join Room'
+            )
         .then(data => {
-          this.$router.push(`/room`)
-          this.$awn.success(data.msg)
-          this.socket.emit('join-room', {
-            id: data.room._id,
-            msg: data.msg
-          })
+          if(!data) this.$awn.warning('room full')
+          else {
+            this.$router.push(`/room/${id}`)
+            this.$awn.success(data.msg)
+            this.socket.emit('join-room', {
+              id: data.room._id,
+              msg: data.msg
+            })
+          }
         })
         .catch(err => {
           this.$awn.warning(err)
