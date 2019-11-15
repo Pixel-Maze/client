@@ -144,7 +144,7 @@ export default {
       top: this.top,
       toLeft: this.toLeft,
       deg: this.deg,
-      playername: this.player
+      playername: this.playername
     })
     this.socket.on('numberId', data => {
       this.id = data

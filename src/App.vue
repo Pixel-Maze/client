@@ -17,7 +17,7 @@ export default {
     this.socket.emit('send', 'hai')
 
     this.socket.on('send', (data) => {
-      console.log(data)
+      console.log('hallo')
     })
   }
 }
