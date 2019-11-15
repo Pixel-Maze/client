@@ -5,21 +5,21 @@
 </template>
 
 <script>
-import io from 'socket.io-client'
+// import io from 'socket.io-client'
 
 export default {
   data () {
     return {
-      socket: io.connect('http://localhost:3000')
+      // socket: io.connect('http://localhost:3000')
     }
   },
-  created() {
-    this.socket.emit('send', 'hai')
+  // created() {
+  //   this.socket.emit('send', 'hai')
 
-    this.socket.on('send', (data) => {
-      console.log(data)
-    })
-  }
+  //   this.socket.on('send', (data) => {
+  //     console.log(data)
+  //   })
+  // }
 }
 </script>
 
